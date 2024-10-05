@@ -2,7 +2,9 @@ package com.ironhack.lab304.dataloader;
 
 import com.ironhack.lab304.model.Customer;
 import com.ironhack.lab304.model.CustomerStatus;
+import com.ironhack.lab304.model.Flight;
 import com.ironhack.lab304.service.CustomerService;
+import com.ironhack.lab304.service.FlightService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +15,11 @@ public class DataLoader implements CommandLineRunner {
 
     private final CustomerService customerService;
 
-    public DataLoader(CustomerService customerService) {
+    private final FlightService flightService;
+
+    public DataLoader(CustomerService customerService, FlightService flightService) {
         this.customerService = customerService;
+        this.flightService = flightService;
     }
 
     @Override
@@ -22,6 +27,10 @@ public class DataLoader implements CommandLineRunner {
         List<Customer> customers = createCustomers();
         saveCustomers(customers);
         List<Customer> customersRetrieved = findCustomers();
+
+        List<Flight> flights = createFlights();
+        saveFights(flights);
+        List<Flight> fightsRetrieved = findFlights();
     }
 
     private void saveCustomers(List<Customer> customers) {
@@ -55,5 +64,34 @@ public class DataLoader implements CommandLineRunner {
                 new Customer("Lucia", 6677, CustomerStatus.Silver),
                 new Customer("Helena", 22111, CustomerStatus.Gold)
         );
+    }
+
+    private static List<Flight> createFlights() {
+        return List.of(
+                new Flight("Boeing 777", "101", 150,10_000),
+                new Flight("Boeing 888", "102", 200, 50_000),
+                new Flight("Boeing 999", "103", 300, 100_000),
+                new Flight("Airbus 301", "104", 150, 13_000),
+                new Flight("Airbus 201", "105", 200,90_000),
+                new Flight("Airbus 101", "106", 300,100_000)
+        );
+    }
+
+    private void saveFights(List<Flight> flights) {
+        System.out.println("Saving flights list : " + flights.size());
+        flightService.saveAll(flights);
+        countFlights();
+    }
+
+    private void countFlights() {
+        System.out.println(flightService.count() + " saved flights to the DB" );
+    }
+
+    private List<Flight> findFlights() {
+        System.out.println("Retrieving flights from the DB");
+        List<Flight> flights = flightService.findAll();
+        System.out.println(flights.size() + " retrieved from the DB" );
+        System.out.println(flights);
+        return flights;
     }
 }
