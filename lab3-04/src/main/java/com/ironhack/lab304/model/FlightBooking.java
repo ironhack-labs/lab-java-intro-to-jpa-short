@@ -1,9 +1,6 @@
 package com.ironhack.lab304.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class FlightBooking {
@@ -12,17 +9,21 @@ public class FlightBooking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer bookingId;
 
-    private int flightId;
+    @ManyToOne
+    @JoinColumn(name = "flightId")
+    private Flight flight;
 
-    private int customerId;
+    @ManyToOne
+    @JoinColumn(name = "customerId")
+    private Customer customer;
 
     // empty constructor for hibernate
     public FlightBooking() {
     }
 
-    public FlightBooking(int flightId, int customerId) {
-        this.flightId = flightId;
-        this.customerId = customerId;
+    public FlightBooking(Flight flight, Customer customer) {
+        this.flight = flight;
+        this.customer = customer;
     }
 
     public Integer getBookingId() {
@@ -33,19 +34,19 @@ public class FlightBooking {
         this.bookingId = bookingId;
     }
 
-    public int getFlightId() {
-        return flightId;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public void setFlightId(int flightId) {
-        this.flightId = flightId;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

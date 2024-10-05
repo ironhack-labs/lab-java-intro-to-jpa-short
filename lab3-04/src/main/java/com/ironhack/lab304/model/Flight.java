@@ -2,11 +2,15 @@ package com.ironhack.lab304.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "flights")
 public class Flight {
 
     @Id
+    @Column(name = "flightId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -17,6 +21,9 @@ public class Flight {
     private Integer totalAircraftSeats;
 
     private Integer flightMileage;
+
+    @OneToMany(mappedBy = "flight")
+    private Set<FlightBooking> bookings = new HashSet<>();
 
     public Flight() {
     }
@@ -66,5 +73,16 @@ public class Flight {
 
     public void setFlightMileage(Integer flightMileage) {
         this.flightMileage = flightMileage;
+    }
+
+    @Override
+    public String toString() {
+        return "Flight{" +
+                "id=" + id +
+                ", flightNumber='" + flightNumber + '\'' +
+                ", aircraft='" + aircraft + '\'' +
+                ", totalAircraftSeats=" + totalAircraftSeats +
+                ", flightMileage=" + flightMileage +
+                '}';
     }
 }

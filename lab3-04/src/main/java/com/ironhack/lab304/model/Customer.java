@@ -2,12 +2,16 @@ package com.ironhack.lab304.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "customers")
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "customerId")
     private Integer id;
 
     private String name;
@@ -15,6 +19,9 @@ public class Customer {
     private CustomerStatus customer;
 
     private Integer totalCustomerMileAge;
+
+    @OneToMany(mappedBy = "customer")
+    private Set<FlightBooking> bookings = new HashSet<>();
 
     public Customer() {
     }
