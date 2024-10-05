@@ -3,7 +3,9 @@ package com.ironhack.lab304.dataloader;
 import com.ironhack.lab304.model.Customer;
 import com.ironhack.lab304.model.CustomerStatus;
 import com.ironhack.lab304.model.Flight;
+import com.ironhack.lab304.model.FlightBooking;
 import com.ironhack.lab304.service.CustomerService;
+import com.ironhack.lab304.service.FlightBookingService;
 import com.ironhack.lab304.service.FlightService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -17,9 +19,12 @@ public class DataLoader implements CommandLineRunner {
 
     private final FlightService flightService;
 
-    public DataLoader(CustomerService customerService, FlightService flightService) {
+    private final FlightBookingService flightBookingService;
+
+    public DataLoader(CustomerService customerService, FlightService flightService, FlightBookingService flightBookingService) {
         this.customerService = customerService;
         this.flightService = flightService;
+        this.flightBookingService = flightBookingService;
     }
 
     @Override
@@ -31,6 +36,26 @@ public class DataLoader implements CommandLineRunner {
         List<Flight> flights = createFlights();
         saveFights(flights);
         List<Flight> fightsRetrieved = findFlights();
+
+        // we create flight bookings
+        // we mix customers and flights so
+        // a customer one have 2 flights and
+        // customer two have also 2 flights
+        Flight flightOne = fightsRetrieved.get(0);
+        Flight flightTwo = fightsRetrieved.get(1);
+        Customer customerOne = customersRetrieved.get(0);
+        Customer customerTwo = customersRetrieved.get(1);
+        createFlightBooking(flightOne, customerOne);
+        createFlightBooking(flightOne, customerTwo);
+        createFlightBooking(flightTwo, customerOne);
+        createFlightBooking(flightTwo, customerTwo);
+    }
+
+    private void createFlightBooking(Flight flightOne, Customer customerOne) {
+        FlightBooking flightBooking = new FlightBooking();
+        flightBooking.setFlight(flightOne);
+        flightBooking.setCustomer(customerOne);
+        flightBookingService.save(flightBooking);
     }
 
     private void saveCustomers(List<Customer> customers) {
